@@ -67,3 +67,103 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin.
     ```powershell
     python app.py
     ```
+
+## Proje Yapısı
+<pre>
+GuardRail-LLM/
+├─ uygulama1_anonymizer/
+├─ uygulama2_anonymizer_ileri/
+├─ uygulama3_embedding_gruplama/
+├─ uygulama4_guardrail_ai/
+├─ uygulama5_saglik_guardrail/
+├─ uygulama6_IK/
+├─ uygulama7_Icerik/
+├─ uygulama8_RAG/
+├─ requirements.txt
+└─ README.md
+</pre>
+
+* uygulama1_anonymizer: Temel PII/PHI tespiti ve anonimleştirme (ör. Presidio).
+
+* uygulama2_anonymizer_ileri: Gelişmiş anonimleştirme ve maskeleme stratejileri.
+
+* uygulama3_embedding_gruplama: Embedding üretimi ve kümelenmesi/gruplaması (vektör-tabanlı yaklaşım).
+
+* uygulama4_guardrail_ai: Guardrails AI / NeMo Guardrails ile I/O korumaları.
+
+* uygulama5_saglik_guardrail: Sağlık alanına özel guardrail örnekleri (uyarılar, danış yönlendirmesi vb.).
+
+* uygulama6_IK: İK (HR) senaryolarında güvenli üretim.
+
+* uygulama7_Icerik: İçerik denetimi / moderasyon örnekleri.
+
+* uygulama8_RAG: RAG (Retrieval-Augmented Generation) ile guardrail entegrasyonu.
+
+Yukarıdaki kısa açıklamalar klasör adlarına dayalı özetlerdir; ayrıntı ve çalıştırma adımları için ilgili alt uygulamanın README’sine bakınız.
+
+## Alt Uygulamalar
+
+Aşağıdaki bağlantılar her alt klasöre ve (varsa) kendi `README.md` dosyalarına yönlendirir:
+
+- **Uygulama 1 – Anonymizer (Temel)**
+  - Klasör: [`./uygulama1_anonymizer/`](./uygulama1_anonymizer/)
+  - README: [`./uygulama1_anonymizer/README.md`](./uygulama1_anonymizer/README.md)
+
+- **Uygulama 2 – Anonymizer (İleri)**
+  - Klasör: [`./uygulama2_anonymizer_ileri/`](./uygulama2_anonymizer_ileri/)
+  - README: [`./uygulama2_anonymizer_ileri/README.md`](./uygulama2_anonymizer_ileri/README.md)
+
+- **Uygulama 3 – Embedding Gruplama**
+  - Klasör: [`./uygulama3_embedding_gruplama/`](./uygulama3_embedding_gruplama/)
+  - README: [`./uygulama3_embedding_gruplama/README.md`](./uygulama3_embedding_gruplama/README.md)
+
+- **Uygulama 4 – Guardrail AI / NeMo Guardrails Entegrasyonu**
+  - Klasör: [`./uygulama4_guardrail_ai/`](./uygulama4_guardrail_ai/)
+  - README: [`./uygulama4_guardrail_ai/README.md`](./uygulama4_guardrail_ai/README.md)
+
+- **Uygulama 5 – Sağlık Guardrail**
+  - Klasör: [`./uygulama5_saglik_guardrail/`](./uygulama5_saglik_guardrail/)
+  - 1. Örnek Ana Akış : README: [`./uygulama5_saglik_guardrail/README.md`](./uygulama5_saglik_guardrail/README.md)
+  - 2. Örnek (TEST Senaryoları) README: [`./uygulama5_saglik_guardrail/README_test.md`](./uygulama5_saglik_guardrail/README_test.md)
+
+- **Uygulama 6 – İK (HR) Senaryoları**
+  - Klasör: [`./uygulama6_IK/`](./uygulama6_IK/)
+  - README: [`./uygulama6_IK/README.md`](./uygulama6_IK/README.md)
+
+- **Uygulama 7 – İçerik/Moderasyon**
+  - Klasör: [`./uygulama7_Icerik/`](./uygulama7_Icerik/)
+  - README: [`./uygulama7_Icerik/README.md`](./uygulama7_Icerik/README.md)
+
+- **Uygulama 8 – RAG (Retrieval-Augmented Generation)**
+  - Klasör: [`./uygulama8_RAG/`](./uygulama8_RAG/)
+  - README: [`./uygulama8_RAG/README.md`](./uygulama8_RAG/README.md)
+
+> Not: Bir alt uygulamada `README.md` henüz yoksa, çalıştırma talimatları doğrudan klasör içindeki dosyalarda yer alıyor olabilir.
+
+
+## Guardrail Türlerine Kısa Bakış
+* Kural Tabanlı (Rule-Based): Regex, anahtar kelime listeleri, şablonlar.
+Artı: Hızlı, yorumlanabilir. Eksi: Bağlamı kavraması sınırlı (kırılganlık).
+
+* Model Tabanlı (Model-Based): Odaklı sınıflandırma/algılama modelleri (toksisite, PII/PHI, jailbreak vb.) ile giriş/çıkış denetimi.
+Artı: Bağlam duyarlı. Eksi: Ek gecikme ve maliyet.
+
+* Vektör/Embedding Tabanlı: Semantik benzerlik ile konu/alan dışına çıkışı engelleme (örn. cosine similarity).
+Artı: Konu/niyet yakınlığını yakalar. Eksi: İnce ayrımlarda kaçırma.
+
+* Şema/Gramer Zorlaması (Structured/Constrained Output): JSON Schema/CFG ile biçimsel geçerlilik garantisi.
+Artı: “Daima geçerli JSON” vb. Eksi: İçeriksel doğruluğu tek başına garanti etmez.
+
+* Decoding-Time Güvenlik (Safety-Aware Decoding): Üretim sırasında güvenlik/ödül modelleriyle token uzayını filtreleme.
+Artı: İnference-time yönlendirme. Eksi: Gecikme artışı.
+
+* Prompt Güvenliği & Enjeksiyon Savunması: Enjeksiyon/jailbreak tespiti, güvenilmeyen içeriğin izolasyonu.
+Artı: Ajan/araç çağırma senaryolarında kritik. Eksi: Sürekli bakım gerekir.
+
+* DLP/PII/PHI Koruması: Girdi/çıktıda kişisel/sağlık verilerinin tespiti ve anonimleştirilmesi.
+Artı: Uyumluluk ve veri sızıntı riskinin düşürülmesi. Eksi: Dil/alan özelleştirmesi gerekebilir.
+
+* HITL & Politika-olarak-Kod: Düşük güven-yüksek risk durumlarında insan devri; RBAC/ABAC ile eylem düzeyinde yetkilendirme.
+Artı: Denetlenebilirlik. Eksi: Operasyonel yük.
+
+Bu desenlerin birden fazlasını birlikte kullanarak savunma-içi-savunma (defense-in-depth) mimarisi önerilir.
