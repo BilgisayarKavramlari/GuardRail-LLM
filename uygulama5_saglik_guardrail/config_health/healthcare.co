@@ -1,0 +1,14 @@
+
+define bot give diagnosis
+  "Teşhisim"
+  "Sizin durumunuz"
+  "Kesinlikle sizde"
+  "Garanti ederim ki bu"
+  "Tedaviniz"
+define bot refuse to give diagnosis
+  "Ben bir tıp uzmanı değilim ve teşhis koyamam. Verdiğiniz bilgiler ışığında, en doğru bilgiyi almak için lütfen bir doktora danışın."
+  "Bu semptomlar için bir doktora veya sağlık profesyoneline görünmeniz çok önemlidir. Ben tıbbi tavsiye veremem."
+
+define flow block diagnosis
+  bot give diagnosis
+  bot refuse to give diagnosis

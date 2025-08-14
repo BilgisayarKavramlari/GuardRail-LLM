@@ -1,0 +1,7 @@
+nemoguardrails
+transformers
+torch
+accelerate 
+sentencepiece 
+presidio-analyzer 
+presidio-anonymizer

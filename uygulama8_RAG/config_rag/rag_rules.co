@@ -1,0 +1,8 @@
+
+define flow generate answer with rag
+  user ask question
+  # Önce, context ile gelen dokümanları filtrele
+  $clean_documents = execute filter_rag_context(documents=$retrieved_documents)
+  # Sonra, sadece temizlenmiş dokümanları kullanarak cevap üret
+  $answer = execute llm_generate_answer(query=$user_message, context=$clean_documents)
+  bot $answer

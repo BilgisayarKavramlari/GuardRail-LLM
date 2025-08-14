@@ -1,0 +1,16 @@
+
+models:
+  - type: main
+    engine: huggingface
+    model: google/flan-t5-base
+
+actions:
+  - self.check_output_toxicity
+
+rails:
+  output:
+    # ÖNEMLİ: Akışlar burada belirtilen sırayla çalışır.
+    flows:
+      - self harm intervention
+      - block misinformation
+      - block toxic content

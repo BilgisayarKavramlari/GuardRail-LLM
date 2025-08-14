@@ -1,0 +1,26 @@
+# Selamlaşma için temel akışı tanımla
+define user express greeting
+  "merhaba"
+  "selam"
+  "naber"
+
+define bot express greeting
+  "Merhaba! Size nasıl yardımcı olabilirim?"
+  "Selam! Bugün nasılsınız?"
+
+define flow greeting
+  user express greeting
+  bot express greeting
+
+# Yasaklı bir konu (siyaset) için koruma rayı tanımla
+define user ask about politics
+  "siyaset hakkında ne düşünüyorsun?"
+  "son seçimler nasıldı?"
+  "başkan hakkında konuşalım"
+
+define bot refuse to answer
+  "Üzgünüm, siyaset gibi hassas konularda konuşmak için programlanmadım."
+
+define flow politics
+  user ask about politics
+  bot refuse to answer

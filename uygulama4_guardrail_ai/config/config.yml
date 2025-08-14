@@ -1,0 +1,9 @@
+# Genel yönerge (opsiyonel, sistem talimatı gibi düşünülebilir)
+instructions:
+  - "Türkçe konuş. Kısa ve anlaşılır yanıt ver."
+
+# Burada **engine** belirtmiyoruz; Python tarafında LLM'i doğrudan enjekte edeceğiz.
+# Bu, HF modelleriyle ilk denemeyi kolaylaştırır.
+models:
+  - type: main
+    engine: constructor   # Python'dan enjekte edilecek (app.py içinde)

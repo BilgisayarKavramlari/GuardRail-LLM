@@ -1,0 +1,6 @@
+define flow main
+    # Kullanıcı "merhaba" veya "hi" derse
+    user ( "merhaba" or "selam" or "hi" )
+    # Bot sabit bir “hello world” yanıtı verir
+    bot "Merhaba! Bu bir NeMo Guardrails demo uygulamasıdır. \
+Guardrails şu anda Transformers ile çalışan açık kaynak bir LLM üzerinde koşturuluyor."
