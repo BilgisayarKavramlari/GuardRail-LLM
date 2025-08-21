@@ -1,75 +1,71 @@
-# Gerekli kütüphaneleri içe aktaralım
-from transformers import pipeline
+# -----------------------------------------------------------------------------
+# Türkçe Duygu Analizi + Açıklanabilirlik (transformers-interpret) - ÇALIŞAN SÜRÜM
+# -----------------------------------------------------------------------------
+# Gereksinimler:
+#   pip install transformers torch transformers-interpret
+# Not: GPU şart değil; CPU ile de çalışır.
+# -----------------------------------------------------------------------------
+
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 from transformers_interpret import SequenceClassificationExplainer
 
-# -----------------------------------------------------------------------------
-# 1. MODELİ YÜKLEME
-# Hugging Face'den Türkçe duygu analizi için önceden eğitilmiş bir model yüklüyoruz.
-# Bu model, verilen metni 'positive' veya 'negative' olarak sınıflandırır.
-# -----------------------------------------------------------------------------
-print("Adım 1: Türkçe duygu analizi modeli yükleniyor...")
-model_name = "google/flan-t5-base"
-sentiment_classifier = pipeline("sentiment-analysis", model=model_name)
+def main():
+    print("Adım 1: Türkçe duygu analizi modeli yükleniyor...")
+    # Seq2Seq (T5) yerine, sınıflandırma kafasıyla eğitilmiş BERT tabanlı model kullanın:
+    model_name = "savasy/bert-base-turkish-sentiment-cased"
 
-# ARA ÇIKTI 1: Modelin doğru yüklenip yüklenmediğini kontrol edelim.
-# Modelin ne işe yaradığını görmek için basit bir test yapalım.
-test_text = "Bu film gerçekten harikaydı."
-prediction = sentiment_classifier(test_text)
-print(f"\nModel Testi -> Metin: '{test_text}'")
-print(f"Modelin Tahmini: {prediction}")
-# BEKLENEN ÇIKTI: [{'label': 'positive', 'score': ...}]
+    # Model ve tokenizer'ı açıkça yükleyelim (pipeline içi de yükleyebilirdi, burada şeffaflık için ayrı)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
-# -----------------------------------------------------------------------------
-# 2. AÇIKLANACAK METNİ TANIMLAMA
-# Şimdi modelin karar mekanizmasını inceleyeceğimiz asıl cümleyi tanımlayalım.
-# -----------------------------------------------------------------------------
-text_to_explain = "Bu restorandaki yemekler harikaydı ve servis çok hızlıydı."
-print(f"\nAdım 2: Açıklanacak metin: '{text_to_explain}'")
+    # Güvenli tarafta olmak için pad token kontrolü (BERT'te zaten vardır):
+    if tokenizer.pad_token_id is None and tokenizer.eos_token_id is not None:
+        # Çok nadir senaryolar için emniyet: pad token yoksa eos'u pad olarak ata
+        tokenizer.pad_token = tokenizer.eos_token
 
-# -----------------------------------------------------------------------------
-# 3. AÇIKLAYICI (EXPLAINER) OLUŞTURMA
-# transformers-interpret kütüphanesinden açıklayıcı nesnesini oluşturuyoruz.
-# Bu nesne, modelin içindeki tokenizer ve model bilgisini alır.
-# -----------------------------------------------------------------------------
-print("\nAdım 3: Açıklayıcı (Explainer) nesnesi oluşturuluyor...")
-cls_explainer = SequenceClassificationExplainer(
-    sentiment_classifier.model,
-    sentiment_classifier.tokenizer
-)
+    # Sentiment pipeline
+    sentiment_classifier = pipeline(
+        task="sentiment-analysis",
+        model=model,
+        tokenizer=tokenizer,
+        device=-1,                  # CPU (GPU varsa 0 yapabilirsiniz)
+        return_all_scores=False
+    )
 
-# -----------------------------------------------------------------------------
-# 4. AÇIKLAMA HESAPLAMASINI ÇALIŞTIRMA
-# Açıklayıcıya metnimizi vererek her bir kelimenin modelin kararına
-# olan etkisini (attribution score) hesaplatıyoruz.
-# Bu skorlar, kelimelerin "pozitif" kararına ne kadar katkı sağladığını gösterir.
-# -----------------------------------------------------------------------------
-print("\nAdım 4: Metin için kelime etki skorları (attributions) hesaplanıyor...")
-word_attributions = cls_explainer(text_to_explain)
+    # ARA ÇIKTI 1: Hızlı bir test
+    test_text = "Bu film gerçekten harikaydı."
+    prediction = sentiment_classifier(test_text)
+    print(f"\nModel Testi -> Metin: '{test_text}'")
+    print(f"Modelin Tahmini: {prediction}")
 
-# ARA ÇIKTI 2: Ham Etki Skorları
-# Bu, her bir kelime (token) ve onun sayısal etki skorunu içeren bir listedir.
-# Pozitif skorlar, kelimenin tahmin edilen sınıfa (bu örnekte 'positive') katkı yaptığını,
-# negatif skorlar ise o sınıftan uzaklaştırdığını gösterir.
-print("\nHesaplanan Ham Etki Skorları:")
-print(word_attributions)
-# BEKLENEN ÇIKTI: [('[CLS]', 0.0), ('Bu', -0.04), ('restoran', 0.1), ('##daki', 0.05),
-# ('yemekler', 0.4), ('harikaydı', 1.2), ('ve', -0.1), ('servis', 0.3),
-# ('çok', 0.5), ('hızlıydı', 0.9), ('[SEP]', 0.0)] (Sayılar yaklaşık değerlerdir)
+    # Adım 2: Açıklanacak metin
+    text_to_explain = "Bu restorandaki yemekler harikaydı ve servis çok hızlıydı."
+    print(f"\nAdım 2: Açıklanacak metin: '{text_to_explain}'")
 
-# ARA ÇIKTI 3: Modelin bu metin için nihai kararı nedir?
-predicted_label = cls_explainer.predicted_label_name
-print(f"\nAçıklayıcıya göre modelin nihai kararı: {predicted_label.upper()}")
-# BEKLENEN ÇIKTI: POSITIVE
+    # Adım 3: Açıklayıcı (Explainer)
+    print("\nAdım 3: Açıklayıcı (Explainer) nesnesi oluşturuluyor...")
+    cls_explainer = SequenceClassificationExplainer(
+        model=sentiment_classifier.model,
+        tokenizer=sentiment_classifier.tokenizer
+    )
 
-# -----------------------------------------------------------------------------
-# 5. GÖRSELLEŞTİRME
-# En etkili kısım! Hesaplanan skorları metin üzerinde renklerle görselleştiriyoruz.
-# Yeşil renk: Pozitif katkı (tahmini güçlendirir)
-# Kırmızı renk: Negatif katkı (tahmini zayıflatır)
-# Rengin tonu, katkının büyüklüğünü gösterir.
-# -----------------------------------------------------------------------------
-print("\nAdım 5: Görselleştirme oluşturuluyor...")
-# Bu komut, Jupyter Notebook'ta çalıştırıldığında çıktıyı doğrudan hücrede gösterir.
-# Eğer script olarak çalıştırıyorsanız, bir HTML dosyasına kaydedebilirsiniz.
-cls_explainer.visualize("sentiment_explanation.html", true_label=predicted_label)
-print("\nAçıklama 'sentiment_explanation.html' dosyasına kaydedildi. Bu dosyayı tarayıcıda açabilirsiniz.")
+    # Adım 4: Attribusyonları hesapla
+    print("\nAdım 4: Metin için kelime etki skorları (attributions) hesaplanıyor...")
+    word_attributions = cls_explainer(text_to_explain)  # varsayılan: modelin tahmin ettiği sınıf için açıklar
+
+    print("\nHesaplanan Ham Etki Skorları (token, katkı):")
+    # İlk 30 tokenı yazdırmak daha okunaklı:
+    for tok, score in word_attributions[:30]:
+        print(f"{tok:<20s}\t{score:+.4f}")
+
+    predicted_label = cls_explainer.predicted_label_name
+    print(f"\nAçıklayıcıya göre modelin nihai kararı: {predicted_label}")
+
+    # Adım 5: Görselleştirme (HTML dosyası)
+    print("\nAdım 5: Görselleştirme oluşturuluyor...")
+    output_html = "sentiment_explanation.html"
+    cls_explainer.visualize(output_html, true_label=predicted_label)
+    print(f"\nAçıklama '{output_html}' dosyasına kaydedildi. Tarayıcıda açabilirsiniz.")
+
+if __name__ == "__main__":
+    main()

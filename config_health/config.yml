@@ -1,0 +1,9 @@
+
+models:
+  - type: main
+    engine: huggingface
+    model: google/flan-t5-base
+rails:
+  output:
+    flows:
+      - block diagnosis

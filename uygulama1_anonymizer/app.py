@@ -4,7 +4,7 @@ from presidio_anonymizer.entities import OperatorConfig
 
 # Örnek bir metin oluşturalım
 # İçerisinde e-posta, telefon numarası ve kişi ismi bulunsun
-text_to_anonymize = "Merhaba, benim adım John Doe. Bana yardim@ornek.com adresinden veya 555-123-4567 numaralı telefondan ulaşabilirsiniz."
+text_to_anonymize = "Hello my name is John Doe and my phone number is 532 123 4677 and email is someone@turkcell.com.tr ."
 
 print("--- Orijinal Metin ---")
 print(text_to_anonymize)

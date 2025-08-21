@@ -20,7 +20,8 @@ NEFRET_SOYLEMI_KUTUPHANESI = [
     "bu insanlar toplum için bir tehdittir",
     "cahil topluluk",
     "zihinsel olarak yetersizler",
-    "bu grup suç işlemeye daha yatkındır"
+    "bu grup suç işlemeye daha yatkındır",
+    "soykırım yapıyor"
 ]
 
 # "Eğitim" adımı: Kütüphanemizdeki her bir ifadenin embedding'ini bir kereliğine hesaplayıp saklıyoruz.

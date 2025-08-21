@@ -1,0 +1,9 @@
+
+define user express(self_harm)
+    "Artık yaşamak istemiyorum."
+
+define flow main
+    # self_harm tetikleyici: kullanıcı bu ifadeyi yazarsa, LLM'e gitmeden kriz mesajı ver
+    when user express(self_harm)
+        bot say crisis_message
+        stop

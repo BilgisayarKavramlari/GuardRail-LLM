@@ -1,0 +1,36 @@
+
+# --- 1. Katman: Kendine Zarar Verme Tespiti (En Yüksek Öncelik) ---
+define user express self_harm_intent
+  "kendime zarar vermek istiyorum"
+  "hayattan bıktım"
+  "intihar etmeyi düşünüyorum"
+  "artık yaşamak istemiyorum"
+
+define bot offer help and support
+  "Bu zor zamanınızda yalnız olmadığınızı bilmenizi isterim. Lütfen profesyonel bir yardım almayı düşünün. Türkiye'de 182'yi arayarak Ruhsal Destek Hattı'na ücretsiz ulaşabilirsiniz. Size yardım etmek için oradalar."
+
+define flow self harm intervention
+  user express self_harm_intent
+  bot offer help and support
+
+# --- 2. Katman: Dezenformasyon Tespiti ---
+define bot spread misinformation
+  "düz dünya"
+  "aşılar ve çipleri"
+  "5G ve virüs"
+  "kontrollü yıkım"
+
+define bot refuse misinformation
+  "Üzgünüm, ürettiğim içerik doğrulanmamış veya yanlış bilgi olarak kabul edilen iddialar içeriyor. Bu tür içerikleri yaymak platform politikalarımıza aykırıdır."
+
+define flow block misinformation
+  bot spread misinformation
+  bot refuse misinformation
+
+# --- 3. Katman: Toksisite Tespiti (Python Aksiyonu ile) ---
+define flow block toxic content
+  # Python'daki `check_output_toxicity` aksiyonunu çalıştır
+  $is_toxic = execute check_output_toxicity
+  # Eğer sonuç True ise...
+  if $is_toxic
+    bot "Üzgünüm, ürettiğim içerik topluluk kurallarımızı ihlal eden saldırgan veya saygısız bir dil içeriyor. Bu nedenle gösterilemez."

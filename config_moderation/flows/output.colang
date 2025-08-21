@@ -1,0 +1,23 @@
+
+define bot say crisis_message
+    "Üzgün olduğunu duyduğuma çok üzüldüm. Şu anda bir profesyonelden destek almak çok önemli olabilir."
+    "Türkiye'de 112 Acil'i arayabilir ya da bir yakınından yardım isteyebilirsin."
+    "Yalnız değilsin; yardım istemek güçlülüktür."
+
+define bot say disinformation_block
+    "Bu konu bilimsel kanıtlarla çelişiyor. Yanlış bilgiyi yaymamak için buradaki içeriği göstermiyorum."
+    "İstersen sana konunun bilimsel arka planını güvenilir kaynaklarla özetleyebilirim."
+
+define flow main
+    # Bot çıktıktan sonra 'düz dünya' anahtar kelimesi tespit edilirse engelle
+    when bot say something
+        if "düz dünya" in $output
+            bot say disinformation_block
+            stop
+
+    # Toksisite kontrolü (Python aksiyonu). Aksiyon True dönerse, kullanıcıya güvenli yanıt
+    when bot say something
+        $flag := check_output_toxicity($output)
+        if $flag == "TOXIC"
+            bot say "Üretilen içerik uygunsuz/toksik tespit edildi. Bu içeriği paylaşmıyorum."
+            stop

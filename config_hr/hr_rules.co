@@ -1,0 +1,19 @@
+
+# LLM'in özetinde kullanabileceği potansiyel olarak yanlı (kodlanmış) ifadeler
+define bot use biased language
+  "agresif"
+  "hırslı"
+  "duygusal"
+  "yardımsever"
+  "destekleyici"
+  "hassas"
+  "doğal lider"
+
+# Yanlı bir özet tespit edildiğinde verilecek standart ve düzeltici cevap
+define bot refuse biased summary
+  "Üretilen özet, potansiyel olarak yanlı ifadeler içerdiği için engellenmiştir. Lütfen adayın yeteneklerine ve deneyimlerine odaklanan, daha nötr ve objektif bir dil kullanarak özeti yeniden oluşturun."
+
+# Yanlı dili engelleyen çıkış koruması akışı
+define flow block biased language
+  bot use biased language
+  bot refuse biased summary

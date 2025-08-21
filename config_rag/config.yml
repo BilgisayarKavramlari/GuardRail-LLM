@@ -1,0 +1,8 @@
+
+models:
+  - type: main
+    engine: huggingface
+    model: google/flan-t5-base
+actions:
+  - self.filter_rag_context
+  - llm_generate_answer

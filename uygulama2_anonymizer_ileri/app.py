@@ -38,10 +38,10 @@ analyzer = AnalyzerEngine(
 
 # --- 3. Adım: Anonimleştirilecek Metni Hazırlama ---
 text_to_anonymize = """
-Hastanın adı Ayşe Yılmaz (T.C. Kimlik No: 12345678910), telefon numarası +90 532 123 45 67'dir.
-Kendisine a.yilmaz@email-provider.com adresinden ulaşılabilir.
-Ödeme için kullanılan kredi kartı: 4545-1234-5678-9012.
-Ayrıca, sistemdeki kullanıcı ID'si 'user-ayse-1985' olarak kayıtlıdır.
+Name of the patient is Ayşe Yılmaz (her T.C. Kimlik No: 12345678910), and phone number is +90 532 123 45 67.
+You can access her through a.yilmaz@email-provider.com email address.
+For the payment you can use the credit card: 4545-1234-5678-9012.
+Also, the id of user is 'user-ayse-1985' from the records.
 """
 
 print("--- Orijinal Metin ---")

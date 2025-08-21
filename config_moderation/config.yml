@@ -1,0 +1,7 @@
+rails:
+  input:
+    flows:
+    - main
+  output:
+    flows:
+    - main
